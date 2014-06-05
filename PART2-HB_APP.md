@@ -82,7 +82,7 @@ The next step is to make the program do more. We need to:
 * Add a student
 * Query for projects by title
 * Add a project
-* Query for a student's grade given a project
+* Query for a student's grade given a project and a student's name
 * Give a grade to a student
 * Show all the grades for a student
 
