@@ -122,9 +122,9 @@ Now that we have numeric data in the table, we can do more interesting things wi
 
     SELECT title, max_grade FROM Projects WHERE max_grade > 50;
 
-Additionally, we can compose WHERE clauses together, joined with the 'OR' and 'AND' operators. This next line selects the title, and maximum possible grade from our project list where the maximum grade is between 50 and 100:
+Additionally, we can compose WHERE clauses together, joined with the 'OR' and 'AND' operators. This next line selects the title, and maximum possible grade from our project list where the maximum grade is between 10 and 60:
 
-    SELECT title, max_grade FROM Projects WHERE max_grade < 10 AND max_grade < 60;
+    SELECT title, max_grade FROM Projects WHERE max_grade > 10 AND max_grade < 60;
 
 This next statement selects all the projects where the maximum grade is less than 25 or more than 75, but not in between:
 
