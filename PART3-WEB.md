@@ -16,11 +16,11 @@ We've already learned how to invoke a virtual environment and why it's necessary
 
 1. Create and _activate_ a new, empty virtual environment. 
 2. Use pip to install Flask
-3. `pip freeze` to see what else got installed \(sneaky\)
+3. `pip freeze` to see what else got installed \(sneaky! Flask requires just a few extra packages to function\)
 
 ... and remember to `deactivate` your environment when you're done working on your app.
 
-If you want a more in-depth review of pip and virtualenv, here's a [full tutorial ](http://www.dabapps.com/blog/introduction-to-pip-and-virtualenv-python/)
+If you want a more in-depth review of `pip` and `virtualenv`, here's a [full tutorial ](http://www.dabapps.com/blog/introduction-to-pip-and-virtualenv-python/)
 
 Sipping From the Flask
 ======================
