@@ -10,32 +10,21 @@ The database changes all that. When we run our database-backed program, asking i
 
 It is of interest to note that our program is written as if it is stateless. Our database-backed application is fundamentally identical to our calculator in terms of program structure. We will abuse this fact as much as we can when writing web applications, as it makes our lives easier.
 
-But First, A Detour Into VirtualEnv
------------------------------------
-We previously learned how to invoke a virtual environment--now is a great time to review the process and the necessity of compartmentalizing your installations for a given application build. 
+Setting Up
+-----------
+We've already learned how to invoke a virtual environment and why it's necessary to compartmentalize your installations for a given application build, but here is a short reminder of the process:
 
-Given that there may be a multitude of users logged onto your system (over the network, most likely), we must generally be careful not to clobber other users' programs and settings. If you install python3 in a multi-user setting, you'll likely anger those who rely on python2.7.
+1. Create and _activate_ a new, empty virtual environment. 
+2. Use pip to install Flask
+3. `pip freeze` to see what else got installed \(sneaky\)
 
-In practice, the only other 'user' you need to worry about angering is your operating system. It relies on certain software packages to be installed to operate correctly. Currently, both linux and OSX are dependent on very specific versions of python. On top of that, it relies on very specific versions of certain modules, so we can't just go upgrading and installing things willy-nilly. (In python, installing certain modules sometimes forces an upgrade of others.)
+... and remember to `deactivate` your environment when you're done working on your app.
 
-Enter the virtual environment. Essentially, a virtualenv is a python sandbox. It gives you, the user, a way to cordon off whichever version of python you want to use along with whatever modules you need. This virtual environment is specific to you, and there's no need to ask permission of the operating system (or the super user) to install new modules.
-
-Here is a short reminder of the process:
-
-1. Figure out how to create an environment. [Here's a hint](http://lmgtfy.com/?q=create+virtual+environment)
-This basically creates a copy of python and all of the essential modules and puts it in a directory of your choice. Creation of a virtual environment is _free_. This means you should make as many as you need, usually one per project. Each of your projects will have different requirements, so don't be stingy and try to use one env for all of them. The directory you put your environment in is usually named 'env' under the top level of your project.
-2. Activate your environment.
-Once an environment is created, you need to activate it. Unless you activate an environment, it simply sits there, sad and alone. But more importantly, unless you activate it, you'll continue to use the OS-specific versions of python and its modules.
-3. Install your modules.
-Even if you don't appreciate the utility of being able to cordon off your python configuration, at the very least, you'll now enjoy the ability to install modules without having to ask for permission. Once your environment is activated, you can install new python modules with impunity. Note: impunity is not the name of the python module installer, that program is actually called pip.
-4. Work!
-As you write and test your code, make sure to run it inside a terminal that has a virtualenv activated. It is very easy to forget this. If your program raises an ImportError when running, you're probably not inside the activated environment. When you activate an environment, it leaves a visual cue on your command prompt, make sure to check for it if things aren't going correctly.
-5. Deactivate your environment with the 'deactivate env' command. 
-
+If you want a more in-depth review of pip and virtualenv, here's a [full tutorial ](http://www.dabapps.com/blog/introduction-to-pip-and-virtualenv-python/)
 
 Sipping From the Flask
 ======================
-For us to have a web application, we must first have a web server. Writing such a thing for every web application would be pure tedium and requires more than a modicum of specific knowledge about HTTP, so we leave it to the experts. Instead, we use something called a framework. That's where flask comes in!
+For us to have a web application, we must first have a web server. Writing such a thing for every web application would be pure tedium and requires more than a modicum of specific knowledge about HTTP, which is why we use Flask!
 
 We activate the framework to create our web server. Before we run it, we create a few functions, and we install the functions as 'handlers' for specific events.
 
@@ -146,18 +135,18 @@ We now have a database-backed web application, that's all there is to it.
 
 Okay, fine.
 
-We need to make it more better-er. At the very least, we need a way for it to display information for a student besides the one hardcoded. To do that, we have to collect input from the person using the browser. One mechanism for acquiring that input is called 'request arguments'. Are they called the request arguments? Whatever.
+We need to make it more better-er. At the very least, we need a way for it to display information for a student besides the one hardcoded. To do that, we have to collect input from the person using the browser. We'll be using a GET request.
 
-The request arguments are a set of key/value pairs that the user can send to the web server on the other end via the url. An example url with request arguments would look like this:
+The arguments for a GET request are a set of key/value pairs that the user can send to the web server via the url. An example url with GET request arguments would look like this:
 
     http://localhost:5000/?key1=val1&key2=val2
 
-A question mark after a url tells the server that the remainder of the line is not part of the url. It indicates that anything that follows is a set of key/value pairs in the form of key=val, with each pair separated by an ampersand. In flask, the set of pairs gets transformed into a dictionary and placed in a special variable, request.args. If you were to print request.args from inside the handler that responds to the above url, you would see the following:
+A question mark after a url tells the server that the remainder of the line is not part of the url. It indicates that anything that follows is a set of key/value pairs in the form of key=val, with each pair separated by an ampersand. In flask, the set of pairs gets transformed into a dictionary which is an attribute on a 'Request Object'. For GET requests, this dictionary is called "args". If you were to print request.args from inside the handler that responds to the above url, you would see the following:
 
     print request.args
     => { "key1": "val1", "key2": "val2" }
 
-We'll use this to collect the student's github username from the user. The request.args variable is a dictionary. To be safe, just in case they don't enter anything, we'll use the .get() method. Modify your get\_student handler as follows:
+We'll use this to collect the student's github username from the user. The request.args variable is a dictionary. To be safe, just in case they don't enter anything, we'll use the familiar .get() method (no relation to GET request). Modify your get\_student handler as follows:
 
     @app.route("/")
     def get_student():
@@ -172,8 +161,8 @@ Now try accessing your application with the following url, changing the github a
 [Jawesome.](http://en.wikipedia.org/wiki/Street_Sharks)
 
 
-### Mad Libs Time
-Remember mad libs? Give me a noun, an adjective, a plural noun and a verb. This next part is a _lot_ like that. First, some setup.
+### Mad Libs Time \(Jinja2\)
+Remember mad libs? Give me a noun, an adjective, a plural noun and a verb. Jinja is a lot like that. First, some setup.
 
 In our current directory, running `ls` should produce the following:
 
@@ -189,7 +178,7 @@ We need to add a two more directories, one named 'static' and one named 'templat
     webapp.py
     hackbright.py
 
-Now, we make a mad lib. Remember, a mad lib is basically a template with a series of spaces for you to fill in with context free words.
+Now, we make our mad lib. Remember, a mad lib is basically a template with a series of spaces for you to fill in with context free words.
 
     The ___noun___ ___verb___ ___adverb___.
 
@@ -305,8 +294,7 @@ Well, our app works, but it's pretty brittle. If you leave the form empty and su
 
 Here are your tasks:
 
-1. On the get\_student handler, display a user's grades for all of their projects they've completed.
-# Jinja documentation
+1. On the get\_student handler, display a user's grades for all of their projects they've completed. [Here are the Jinja2 docs if you need them.](http://jinja.pocoo.org/docs/dev/#jinja2-documentation)
 2. On the same page, when you click on a project name, it brings you to a page listing all students and their grades for that particular project. You will need a new handler for this page.
 3. From _that_ page, when clicking on a student's github account, it sends you back to the get\_student handler.
 4. Make a pair of handlers that allows a user to create a new student record.
